@@ -57,7 +57,16 @@ message(STATUS "Runtime Directory: " ${CUDAToolkit_LIBRARY_DIR})
 add_library(gpusim_static STATIC ${GPUSIM_SRC})
 add_library(gpusim_shared SHARED ${GPUSIM_SRC})
 
-target_link_libraries(gpusim_static CUDA::cudart_static CUDA::curand_static CUDA::cublas_static)
+# USE_CUDA_STATIC=No links the CUDA libraries dynamically, as CI does to run
+# the GPU tests on a simulated GPU, which stands in for those libraries.
+if(NOT DEFINED USE_CUDA_STATIC)
+    set(USE_CUDA_STATIC Yes)
+endif()
+if(USE_CUDA_STATIC)
+    target_link_libraries(gpusim_static CUDA::cudart_static CUDA::curand_static CUDA::cublas_static)
+else()
+    target_link_libraries(gpusim_static CUDA::cudart CUDA::curand CUDA::cublas)
+endif()
 target_link_libraries(gpusim_shared CUDA::cudart CUDA::curand CUDA::cublas)
 set_source_files_properties(${CUDA_FILES} PROPERTIES LANGUAGE CUDA)
 
