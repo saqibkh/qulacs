@@ -188,7 +188,7 @@ jobs:
       # Installs CUDA 12.6 and a simulated T4. The build links the toolkit's
       # libraries; the tests run on the simulator's through `vgpu run`.
       - name: Setup simulated GPU
-        uses: pantheongpu/setup-pantheonsim@v0
+        uses: pantheongpu/pantheonsim@cublas-set-get
         with:
           gpu: nvidia/t4
           cuda-toolkit: "12.6"
